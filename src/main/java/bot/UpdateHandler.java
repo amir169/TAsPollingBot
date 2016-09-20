@@ -34,11 +34,10 @@ public class UpdateHandler {
         sendMessage.setChatId(chatID);
 
         if (questionText != null)
+
             sendMessage.setText(questionText);
         else {
 
-            System.out.println("شبتساهقثلذاب");
-            System.out.println(ConfigReader.THANK_YOU);
             sendMessage.setText(ConfigReader.THANK_YOU);
         }
         return sendMessage;

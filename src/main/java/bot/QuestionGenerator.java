@@ -1,5 +1,7 @@
 package bot;
 
+import config.ConfigReader;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +29,7 @@ public class QuestionGenerator {
 
     public String getNextQuestion(String user)
     {
-        return null;
+        return ConfigReader.QUESTION;
     }
 
 

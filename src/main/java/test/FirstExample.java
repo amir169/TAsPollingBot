@@ -9,8 +9,11 @@ import java.sql.*;
 public class FirstExample {
 
     public static void main(String[] args) {
+
+        System.out.println(ConfigReader.class.getProtectionDomain().getCodeSource().getLocation().getPath()  );
         Connection conn = null;
         Statement stmt = null;
+        System.out.println(ConfigReader.QUESTION);
         try{
             //STEP 2: Register JDBC driver
             Class.forName(ConfigReader.DB_DRIVER);
