@@ -26,10 +26,10 @@ public class ConfigUtils {
         return prop;
     }
 
-    public static String get(String key,String encoding){
+    public static String get(String key){
         try{
 
-            return new String(getPropertyFromConfigFile(key).getBytes("ISO-8859-1"),encoding);
+            return new String(getPropertyFromConfigFile(key).getBytes("ISO-8859-1"),"UTF-8");
 
         }catch(IOException ex){
             return null;

@@ -1,6 +1,7 @@
 package bot;
 
-import DAO.UserDAO;
+import DB.QuestionGenerator;
+import DB.UserData;
 import config.ConfigReader;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
@@ -28,7 +29,7 @@ public class UpdateHandler {
         //update user state
 
         String chatID = String.valueOf(update.getCallbackQuery().getFrom().getId());
-        String questionText = QuestionGenerator.getInstance().getNextQuestion(chatID);
+        String questionText = ConfigReader.THANK_YOU;
 
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatID);
@@ -46,10 +47,10 @@ public class UpdateHandler {
 
     public SendMessage handleMessage() {
 
-        if(UserDAO.getInstance().searchUser(update.getMessage().getChatId())){
+        if(UserData.getInstance().searchUser(update.getMessage().getChatId())){
 
             String chatID = String.valueOf(update.getMessage().getChatId());
-            String questionText = QuestionGenerator.getInstance().getNextQuestion(chatID);
+            String questionText = QuestionGenerator.getInstance().getNextQuestion(new Long(chatID));
 
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(chatID);
@@ -71,7 +72,7 @@ public class UpdateHandler {
         else
         {
             String chatID = String.valueOf(update.getMessage().getChatId());
-            String text = "get lost";
+            String text = ConfigReader.WELCOME;
 
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(chatID);

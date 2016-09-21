@@ -9,13 +9,20 @@ public class ConfigReader {
 
     private ConfigReader(){};
 
-    public static String DB_URL = ConfigUtils.get("url","ISO-8859-1");
-    public static String DB_USERNAME = ConfigUtils.get("username","ISO-8859-1");
-    public static String DB_PASSWORD = ConfigUtils.get("password","ISO-8859-1");
-    public static String DB_DRIVER = ConfigUtils.get("jdbc_driver","ISO-8859-1");
+    public static String DB_URL = ConfigUtils.get("url");
+    public static String DB_USERNAME = ConfigUtils.get("username");
+    public static String DB_PASSWORD = ConfigUtils.get("password");
+    public static String DB_DRIVER = ConfigUtils.get("jdbc_driver");
 
-    public static String THANK_YOU = ConfigUtils.get("thank_you","UTF-8");
-    public static String SIGN_IN_ERROR = ConfigUtils.get("sign_in_first","UTF-8");
+    public static String WELCOME = ConfigUtils.get("welcome");
+    public static String THANK_YOU = ConfigUtils.get("thank_you");
+    public static String SIGN_IN_ERROR = ConfigUtils.get("sign_in_first");
 
-    public static String QUESTION = ConfigUtils.get("question#2","UTF-8");
+    public static int QUESTION_COUNT = Integer.valueOf(ConfigUtils.get("number_of_questions"));
+    public static String CONSTANT_QUESTION_STATEMENT = ConfigUtils.get("constant_statement");
+
+    public static String getQuestion(int index)
+    {
+        return ConfigUtils.get("question#" + String.valueOf(index));
+    }
 }
