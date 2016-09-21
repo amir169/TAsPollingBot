@@ -20,6 +20,7 @@ public class ConfigReader {
 
     public static int QUESTION_COUNT = Integer.valueOf(ConfigUtils.get("number_of_questions"));
     public static String CONSTANT_QUESTION_STATEMENT = ConfigUtils.get("constant_statement");
+    public static String CURRENT_TERM = ConfigUtils.get("current_term");
 
     public static String getQuestion(int index)
     {

@@ -31,6 +31,10 @@ public class QuestionGenerator {
     {
         int studentID = UserData.getInstance().getStudentIdByChatid(chatid);
         Map<String,Integer> state = UserData.getInstance().getState(studentID);
+
+        if(state.get("taCourseNumber") >= UserData.getInstance().getTaCourseCount(studentID))
+            return null;
+
         Map<String,Integer> taCourseData =  UserData.getInstance().getNthTaCourse(studentID, state.get("taCourseNumber"));
 
         String taName = TaData.getInstance().getTaName(taCourseData.get("taid"));

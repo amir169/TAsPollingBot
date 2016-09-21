@@ -1,5 +1,6 @@
 package bot;
 
+import DB.PollingData;
 import DB.QuestionGenerator;
 import DB.UserData;
 import config.ConfigReader;
@@ -9,6 +10,7 @@ import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,19 +26,31 @@ public class UpdateHandler {
 
     public SendMessage handleResponse() {
 
-        //insert vote record
+        PollingData.getInstance().insertVote(update.getCallbackQuery().getFrom().getId(),
+                Integer.valueOf(update.getCallbackQuery().getData()),
+                new Date());
 
-        //update user state
 
         String chatID = String.valueOf(update.getCallbackQuery().getFrom().getId());
-        String questionText = ConfigReader.THANK_YOU;
+        String questionText = QuestionGenerator.getInstance().getNextQuestion(new Long(chatID));
 
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatID);
 
-        if (questionText != null)
+        if (questionText != null){
 
             sendMessage.setText(questionText);
+            InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+            List<InlineKeyboardButton> firstRow = createRow(1);
+
+            List<List<InlineKeyboardButton>> list = new ArrayList<>();
+
+            list.add(firstRow);
+            inlineKeyboardMarkup.setKeyboard(list);
+
+            sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+            sendMessage.enableMarkdown(true);
+        }
         else {
 
             sendMessage.setText(ConfigReader.THANK_YOU);

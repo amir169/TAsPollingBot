@@ -36,7 +36,7 @@ public class UserData {
         return !result.isEmpty();
     }
 
-    public int getTaCourseCount(int studentID)
+    public long getTaCourseCount(int studentID)
     {
         String sql = "SELECT count(*) AS count FROM st_ta WHERE stid = ?";
         ArrayList<Object> params = new ArrayList<>();
@@ -44,10 +44,10 @@ public class UserData {
 
         ArrayList<Map<String,Object>> result = DBConnection.executeQuery(sql, params);
 
-        int returnResult = 0;
+        long returnResult = 0;
 
         if(result.size() > 0 && result.get(0).containsKey("count"))
-            returnResult = (int)result.get(0).get("count");
+            returnResult = (long)result.get(0).get("count");
 
         return returnResult;
     }
