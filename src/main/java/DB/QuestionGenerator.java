@@ -1,6 +1,5 @@
 package DB;
 
-import bot.Question;
 import config.ConfigReader;
 
 
@@ -12,7 +11,6 @@ import java.util.Map;
  */
 public class QuestionGenerator {
 
-    private static ArrayList<Question> questions = new ArrayList<>();
 
     private static QuestionGenerator instance = new QuestionGenerator();
 

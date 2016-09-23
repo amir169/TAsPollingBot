@@ -1,6 +1,5 @@
 package config;
 
-import bot.Question;
 
 /**
  * Created by Amir Shams on 9/19/2016.
@@ -21,6 +20,14 @@ public class ConfigReader {
     public static int QUESTION_COUNT = Integer.valueOf(ConfigUtils.get("number_of_questions"));
     public static String CONSTANT_QUESTION_STATEMENT = ConfigUtils.get("constant_statement");
     public static String CURRENT_TERM = ConfigUtils.get("current_term");
+    public static String DUPLICATE_ANSWER_ERROR = ConfigUtils.get("duplicate_answer_error");
+    public static String INVALID_INPUT = ConfigUtils.get("invalid_input");
+    public static String YOUR_ANSWER_IS = ConfigUtils.get("your_answer_is");
+    public static String GAME_OVER = ConfigUtils.get("game_over");
+    public static String EXPIRED = ConfigUtils.get("expired");
+    public static int NUMBER_OF_BUTTONS = Integer.valueOf(ConfigUtils.get("number_of_possible_answers"));
+
+    public static String getVotingOption(int index){return ConfigUtils.get("option#" + String.valueOf(index));}
 
     public static String getQuestion(int index)
     {

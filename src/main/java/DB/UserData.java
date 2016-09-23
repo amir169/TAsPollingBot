@@ -1,6 +1,7 @@
 package DB;
 
 import bot.Main;
+import config.ConfigReader;
 
 import java.sql.Array;
 import java.sql.PreparedStatement;
@@ -58,7 +59,7 @@ public class UserData {
                 "ORDER BY taid, coid limit ? offset ?";
 
         ArrayList<Object> params = new ArrayList<>();
-        params.add("1");      //must be replaced by term number
+        params.add(ConfigReader.CURRENT_TERM);
         params.add(stid);
         params.add(1);
         params.add(n);
@@ -93,7 +94,7 @@ public class UserData {
         String sql = "SELECT q_number, ta_co_number FROM st_state WHERE stid = ? AND term = ?";
         ArrayList<Object> params = new ArrayList<>();
         params.add(stid);
-        params.add("1");
+        params.add(ConfigReader.CURRENT_TERM);
 
         ArrayList<Map<String,Object>> queryResult = DBConnection.executeQuery(sql, params);
         Map<String,Integer> result = new HashMap<>();
@@ -101,5 +102,52 @@ public class UserData {
         result.put("taCourseNumber",(int)queryResult.get(0).get("ta_co_number"));
 
         return result;
+    }
+
+    public void setLastMessage(long chatid,long messageID)
+    {
+        String sql = "SELECT * FROM last_message WHERE chatid = ?";
+        ArrayList<Object> params = new ArrayList<>();
+
+        params.add(chatid);
+
+        ArrayList<Map<String,Object>> result = DBConnection.executeQuery(sql, params);
+        if(result.isEmpty())
+            insertLastMessage(chatid,messageID);
+        else
+            updateLastMessage(chatid,messageID);
+
+    }
+
+    private void updateLastMessage(long chatid, long messageID) {
+
+        String sql = "UPDATE last_message SET messageid = ? WHERE chatid = ?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(messageID);
+        params.add(chatid);
+
+        DBConnection.executeUpdate(sql,params);
+    }
+
+    private void insertLastMessage(long chatid, long messageID) {
+
+        String sql = "INSERT INTO last_message VALUES (?,?)";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(chatid);
+        params.add(messageID);
+
+        DBConnection.executeUpdate(sql, params);
+    }
+
+    public long getLastMessage(long chatID)
+    {
+
+        String sql = "SELECT messageid FROM last_message WHERE chatid = ?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(chatID);
+
+        ArrayList<Map<String,Object>> result = DBConnection.executeQuery(sql, params);
+
+        return new Long((String)result.get(0).get("messageid"));
     }
 }

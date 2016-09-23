@@ -1,5 +1,7 @@
 package bot;
 
+import DB.UserData;
+import config.ConfigReader;
 import org.telegram.telegrambots.TelegramApiException;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.methods.updatingmessages.EditMessageReplyMarkup;
@@ -23,20 +25,30 @@ public class PollBot extends TelegramLongPollingBot {
         if(update.hasCallbackQuery()) {
             current = new UpdateHandler(update).handleResponse();
 
-            try {
-                editMessageReplyMarkup(deleteKeyboard(update));
-                editMessageText(editMessage(update));
-
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
-
             if(current != null){
+
                 try {
-                    sendMessage(current);
+
+                    editMessageReplyMarkup(deleteKeyboard(update));
+                    editMessageText(editMessage(update));
+                    long messageID = sendMessage(current).getMessageId();
+                    UserData.getInstance().setLastMessage(new Long(current.getChatId()),messageID);
+
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
                 }
+            }
+            else
+            {
+                try {
+
+                    editMessageReplyMarkup((deleteKeyboard(update)));
+                    editMessageText(wrongAction(update));
+
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+
             }
         }
         else if(update.hasMessage()){
@@ -44,13 +56,13 @@ public class PollBot extends TelegramLongPollingBot {
             current = new UpdateHandler(update).handleMessage();
 
             try {
-                sendMessage(current);
+
+                long messageID = sendMessage(current).getMessageId();
+                UserData.getInstance().setLastMessage(new Long(current.getChatId()),messageID);
+
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
-        }
-        else {
-            cu
         }
 
         System.out.println(update);
@@ -70,7 +82,15 @@ public class PollBot extends TelegramLongPollingBot {
         return new EditMessageText()
                     .setChatId(String.valueOf(update.getCallbackQuery().getFrom().getId()))
                         .setMessageId(update.getCallbackQuery().getMessage().getMessageId())
-                            .setText(update.getCallbackQuery().getMessage().getText() + "\n" + "پاسخ شما : " + update.getCallbackQuery().getData());
+                            .setText(update.getCallbackQuery().getMessage().getText() + "\n" + ConfigReader.YOUR_ANSWER_IS + update.getCallbackQuery().getData());
+    }
+    private EditMessageText wrongAction(Update update)
+    {
+        return new EditMessageText()
+                    .setChatId(String.valueOf(update.getCallbackQuery().getFrom().getId()))
+                        .setMessageId(update.getCallbackQuery().getMessage().getMessageId())
+                            .setText(ConfigReader.EXPIRED);
+
     }
 
     @Override

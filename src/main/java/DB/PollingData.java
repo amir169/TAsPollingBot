@@ -30,22 +30,40 @@ public class PollingData {
         int questionNumber = state.get("questionNumber");
         Map<String,Integer> taCourseData = UserData.getInstance().getNthTaCourse(studentID,taCourseNumber);
 
-        String sql = "INSERT INTO poll VALUES (?,?,?,?,?,?,?)";
-        ArrayList<Object> params = new ArrayList<>();
-        params.add(studentID);
-        params.add(taCourseData.get("taid"));
-        params.add(taCourseData.get("coid"));
-        params.add(ConfigReader.CURRENT_TERM);
-        params.add(questionNumber);
-        params.add(score);
-        params.add(new java.sql.Date(date.getTime()));
+        int result = -1;
+        ArrayList<Object> key = new ArrayList<>();
+        key.add(studentID);
+        key.add(taCourseData.get("taid"));
+        key.add(taCourseData.get("coid"));
+        key.add(ConfigReader.CURRENT_TERM);
+        key.add(questionNumber);
 
-        int result = DBConnection.executeUpdate(sql,params);
-        System.out.println(result);
-        if(result > 0)
-            nextState(studentID,taCourseNumber,questionNumber);
+        if(canVote(key)) {
+
+            String sql = "INSERT INTO poll VALUES (?,?,?,?,?,?,?)";
+            ArrayList<Object> params = new ArrayList<>();
+            params.addAll(key);
+            params.add(score);
+            params.add(new java.sql.Date(date.getTime()));
+
+            result = DBConnection.executeUpdate(sql,params);
+
+            if(result > 0)
+                nextState(studentID,taCourseNumber,questionNumber);
+
+        }
 
         return result;
+
+    }
+
+    private boolean canVote(ArrayList<Object> key) {
+
+        String sql = "SELECT * FROM poll WHERE stid = ? AND taid = ? AND coid = ? AND term = ? AND q_number = ?";
+        ArrayList<Map<String,Object>> result = DBConnection.executeQuery(sql, key);
+
+
+        return result.isEmpty();
     }
 
     private void nextState(int studentID,int taCourseNumber,int questionNumber) {
@@ -58,7 +76,7 @@ public class PollingData {
             questionNumber++;
         }
 
-        System.out.println(questionNumber);
+
         String sql = "UPDATE st_state SET q_number = ? ,ta_co_number = ? WHERE stid = ? AND term = ?";
         ArrayList<Object> params = new ArrayList<>();
 

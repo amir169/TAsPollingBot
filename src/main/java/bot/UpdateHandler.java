@@ -4,6 +4,7 @@ import DB.PollingData;
 import DB.QuestionGenerator;
 import DB.UserData;
 import config.ConfigReader;
+import config.ConfigUtils;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -26,10 +27,15 @@ public class UpdateHandler {
 
     public SendMessage handleResponse() {
 
-        PollingData.getInstance().insertVote(update.getCallbackQuery().getFrom().getId(),
+        if(isNotAllowedToRespondThis(update))
+            return null;
+
+        int pollingResult = PollingData.getInstance().insertVote(update.getCallbackQuery().getFrom().getId(),
                 Integer.valueOf(update.getCallbackQuery().getData()),
                 new Date());
 
+        if(pollingResult == -1)
+            return null;
 
         String chatID = String.valueOf(update.getCallbackQuery().getFrom().getId());
         String questionText = QuestionGenerator.getInstance().getNextQuestion(new Long(chatID));
@@ -37,11 +43,12 @@ public class UpdateHandler {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatID);
 
+
         if (questionText != null){
 
             sendMessage.setText(questionText);
             InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-            List<InlineKeyboardButton> firstRow = createRow(1);
+            List<InlineKeyboardButton> firstRow = createRow(ConfigReader.NUMBER_OF_BUTTONS);
 
             List<List<InlineKeyboardButton>> list = new ArrayList<>();
 
@@ -55,8 +62,22 @@ public class UpdateHandler {
 
             sendMessage.setText(ConfigReader.THANK_YOU);
         }
+
+
         return sendMessage;
 
+    }
+
+    private boolean isNotAllowedToRespondThis(Update update) {
+
+        long chatid = update.getCallbackQuery().getFrom().getId();
+        long messageID = update.getCallbackQuery().getMessage().getMessageId();
+        long lastMessage = UserData.getInstance().getLastMessage(chatid);
+
+        if(messageID == lastMessage)
+            return false;
+
+        return true;
     }
 
     public SendMessage handleMessage() {
@@ -68,18 +89,23 @@ public class UpdateHandler {
 
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(chatID);
-            sendMessage.setText(questionText);
 
-            InlineKeyboardMarkup inlineKeyboardMarkup=new InlineKeyboardMarkup();
-            List<InlineKeyboardButton> firstRow = createRow(1);
+            if(questionText != null) {
+                sendMessage.setText(questionText);
 
-            List<List<InlineKeyboardButton>> list = new ArrayList<>();
+                InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+                List<InlineKeyboardButton> firstRow = createRow(ConfigReader.NUMBER_OF_BUTTONS);
 
-            list.add(firstRow);
-            inlineKeyboardMarkup.setKeyboard(list);
+                List<List<InlineKeyboardButton>> list = new ArrayList<>();
 
-            sendMessage.setReplyMarkup(inlineKeyboardMarkup);
-            sendMessage.enableMarkdown(true);
+                list.add(firstRow);
+                inlineKeyboardMarkup.setKeyboard(list);
+
+                sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+                sendMessage.enableMarkdown(true);
+            }
+            else
+                sendMessage.setText(ConfigReader.GAME_OVER);
 
             return sendMessage;
         }
@@ -97,22 +123,20 @@ public class UpdateHandler {
 
     }
 
-    private List<InlineKeyboardButton> createRow(int startingNumber) {
+    private List<InlineKeyboardButton> createRow(int numberOfButtons) {
 
-        ArrayList<String> emojies = new ArrayList<>();
+//        emojies.add(String.valueOf(startingNumber    ) + "  \uD83D\uDE21");
+//        emojies.add(String.valueOf(startingNumber + 1) + "  \uD83D\uDE31");
+//        emojies.add(String.valueOf(startingNumber + 2) + "  \uD83D\uDE10");
+//        emojies.add(String.valueOf(startingNumber + 3) + "  \uD83D\uDE0A");
+//        emojies.add(String.valueOf(startingNumber + 4) + "  \uD83D\uDE0D");
 
-        emojies.add(String.valueOf(startingNumber    ) + "  \uD83D\uDE21");
-        emojies.add(String.valueOf(startingNumber + 1) + "  \uD83D\uDE31");
-        emojies.add(String.valueOf(startingNumber + 2) + "  \uD83D\uDE10");
-        emojies.add(String.valueOf(startingNumber + 3) + "  \uD83D\uDE0A");
-        emojies.add(String.valueOf(startingNumber + 4) + "  \uD83D\uDE0D");
+        List<InlineKeyboardButton> buttons = new ArrayList<>();
 
-        List<InlineKeyboardButton> scores = new ArrayList<>();
+        for(int i = 0;i<numberOfButtons;i++)
+            buttons.add(new InlineKeyboardButton().setText(ConfigReader.getVotingOption(i + 1)).setCallbackData(String.valueOf(i + 1)));
 
-        for(int i = 0;i<5;i++)
-            scores.add(new InlineKeyboardButton().setText(emojies.get(i)).setCallbackData(String.valueOf(i + startingNumber)));
-
-        return scores;
+        return buttons;
     }
 
 }
