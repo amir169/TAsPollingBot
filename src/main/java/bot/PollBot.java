@@ -3,6 +3,7 @@ package bot;
 import org.telegram.telegrambots.TelegramApiException;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.methods.updatingmessages.EditMessageReplyMarkup;
+import org.telegram.telegrambots.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -24,6 +25,7 @@ public class PollBot extends TelegramLongPollingBot {
 
             try {
                 editMessageReplyMarkup(deleteKeyboard(update));
+                editMessageText(editMessage(update));
 
             } catch (TelegramApiException e) {
                 e.printStackTrace();
@@ -37,7 +39,7 @@ public class PollBot extends TelegramLongPollingBot {
                 }
             }
         }
-        else {
+        else if(update.hasMessage()){
 
             current = new UpdateHandler(update).handleMessage();
 
@@ -46,6 +48,9 @@ public class PollBot extends TelegramLongPollingBot {
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
+        }
+        else {
+            cu
         }
 
         System.out.println(update);
@@ -58,6 +63,14 @@ public class PollBot extends TelegramLongPollingBot {
                     .setChatId(String.valueOf(update.getCallbackQuery().getFrom().getId()))
                         .setMessageId(update.getCallbackQuery().getMessage().getMessageId())
                             .setReplyMarkup(new InlineKeyboardMarkup().setKeyboard(new ArrayList<List<InlineKeyboardButton>>()));
+    }
+
+    private EditMessageText editMessage(Update update)
+    {
+        return new EditMessageText()
+                    .setChatId(String.valueOf(update.getCallbackQuery().getFrom().getId()))
+                        .setMessageId(update.getCallbackQuery().getMessage().getMessageId())
+                            .setText(update.getCallbackQuery().getMessage().getText() + "\n" + "پاسخ شما : " + update.getCallbackQuery().getData());
     }
 
     @Override
