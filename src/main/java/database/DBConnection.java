@@ -1,4 +1,4 @@
-package DB;
+package database;
 import config.ConfigReader;
 
 import java.sql.*;

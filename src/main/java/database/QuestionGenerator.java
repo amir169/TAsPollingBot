@@ -1,9 +1,8 @@
-package DB;
+package database;
 
 import config.ConfigReader;
 
 
-import java.util.ArrayList;
 import java.util.Map;
 
 /**

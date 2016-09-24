@@ -33,4 +33,8 @@ public class ConfigReader {
     {
         return ConfigUtils.get("question#" + String.valueOf(index));
     }
+
+    public static String getButtonValue(int index) {
+        return ConfigUtils.get("value#" + String.valueOf(index));
+    }
 }

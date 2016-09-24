@@ -1,12 +1,7 @@
-package DB;
+package database;
 
-import bot.Main;
 import config.ConfigReader;
 
-import java.sql.Array;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;

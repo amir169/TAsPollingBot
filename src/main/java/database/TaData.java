@@ -1,4 +1,4 @@
-package DB;
+package database;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -6,26 +6,26 @@ import java.util.Map;
 /**
  * Created by Amir Shams on 9/21/2016.
  */
-public class CourseData {
+public class TaData {
 
-    private static CourseData instance;
-    private CourseData(){}
+    private static TaData instance;
+    private TaData(){}
 
-    public static CourseData getInstance()
+    public static TaData getInstance()
     {
         if(instance == null)
-            instance = new CourseData();
+            instance = new TaData();
         return instance;
     }
 
-    public String getCourseName(int id)
+    public String getTaName(int id)
     {
-        String sql = "SELECT coName FROM course WHERE coid = ?";
+        String sql = "SELECT taName FROM ta WHERE taid = ?";
         ArrayList<Object> params = new ArrayList<>();
         params.add(id);
 
         ArrayList<Map<String,Object>> queryResult = DBConnection.executeQuery(sql, params);
 
-        return (String) queryResult.get(0).get("coName");
+        return (String) queryResult.get(0).get("taName");
     }
 }
