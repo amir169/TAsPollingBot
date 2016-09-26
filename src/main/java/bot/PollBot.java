@@ -19,7 +19,10 @@ public class PollBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
 
-        ArrayList<BotApiMethod<Message>> actions = HandlerFactory.create(update).handle();
+        ArrayList<BotApiMethod<Message>> actions = new ArrayList<>();
+
+        if(update.hasMessage() || update.hasCallbackQuery())
+            actions = HandlerFactory.create(update).handle();
 
         try {
             doActions(actions);

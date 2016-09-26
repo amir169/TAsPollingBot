@@ -68,6 +68,7 @@ public class CallbackHandler extends AbstractUpdateHandler {
     }
 
     private Update update;
+
     public CallbackHandler(Update update)
     {
         this.update = update;

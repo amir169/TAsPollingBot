@@ -26,6 +26,7 @@ public class ConfigReader {
     public static String GAME_OVER = ConfigUtils.get("game_over");
     public static String EXPIRED = ConfigUtils.get("expired");
     public static int NUMBER_OF_BUTTONS = Integer.valueOf(ConfigUtils.get("number_of_possible_answers"));
+    public static int MAX_BUTTONS_IN_ROW = Integer.valueOf(ConfigUtils.get("max_buttons_in_row"));
 
     public static String getVotingOption(int index){return ConfigUtils.get("option#" + String.valueOf(index));}
 
@@ -37,4 +38,8 @@ public class ConfigReader {
     public static String getButtonValue(int index) {
         return ConfigUtils.get("value#" + String.valueOf(index));
     }
+
+
+
+
 }

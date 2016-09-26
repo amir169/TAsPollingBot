@@ -19,22 +19,30 @@ public abstract class AbstractUpdateHandler {
     protected InlineKeyboardMarkup createInlineKeyboardMarkup()
     {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        List<InlineKeyboardButton> firstRow = createRow(ConfigReader.NUMBER_OF_BUTTONS);
+        List<List<InlineKeyboardButton>> keyboard = createKeyboard(ConfigReader.NUMBER_OF_BUTTONS);
 
-        List<List<InlineKeyboardButton>> list = new ArrayList<>();
-
-        list.add(firstRow);
-        inlineKeyboardMarkup.setKeyboard(list);
+        inlineKeyboardMarkup.setKeyboard(keyboard);
 
         return inlineKeyboardMarkup;
     }
 
-    protected List<InlineKeyboardButton> createRow(int numberOfButtons) {
+    protected List<List<InlineKeyboardButton>> createKeyboard(int numberOfButtons) {
 
-        List<InlineKeyboardButton> buttons = new ArrayList<>();
+        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+        List<InlineKeyboardButton> currentRow = new ArrayList<>();
 
-        for(int i = 0;i<numberOfButtons;i++)
-            buttons.add(new InlineKeyboardButton().setText(ConfigReader.getVotingOption(i + 1)).setCallbackData(String.valueOf(i + 1)));
+        for(int i = 0;i<numberOfButtons;i++) {
+
+            if(currentRow.size() < ConfigReader.MAX_BUTTONS_IN_ROW)
+                currentRow.add(new InlineKeyboardButton().setText(ConfigReader.getVotingOption(i + 1)).setCallbackData(String.valueOf(i + 1)));
+            else
+            {
+                buttons.add(currentRow);
+                currentRow = new ArrayList<>();
+                currentRow.add(new InlineKeyboardButton().setText(ConfigReader.getVotingOption(i + 1)).setCallbackData(String.valueOf(i + 1)));
+            }
+        }
+        buttons.add(currentRow);
 
         return buttons;
     }
