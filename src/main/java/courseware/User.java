@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public class User {
 
-    ArrayList<Course> courses;
+    public ArrayList<Course> courses;
 
     public User() {
        courses = new ArrayList<>();

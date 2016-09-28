@@ -167,8 +167,6 @@ public class UserData {
 
         params.add(studentID);
 
-
-
         try {
             byte[] bytes = comment.getBytes();
             comment = new String(bytes,"UTF-8");
@@ -179,6 +177,18 @@ public class UserData {
         params.add(comment);
         params.add(ConfigReader.CURRENT_TERM);
         params.add(new java.sql.Date(date.getTime()));
+
+        DBConnection.executeUpdate(sql,params);
+    }
+
+    public void addTaCourse(int stid,int taid,int coid)
+    {
+        String sql = "INSERT INTO st_ta VALUES (?,?,?,?)";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(stid);
+        params.add(taid);
+        params.add(coid);
+        params.add(ConfigReader.CURRENT_TERM);
 
         DBConnection.executeUpdate(sql,params);
     }
