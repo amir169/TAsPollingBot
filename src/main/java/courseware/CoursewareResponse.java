@@ -100,8 +100,6 @@ public class CoursewareResponse {
         }
     }
 
-
-
     public static void parseTAs(Course course ,JSONArray response) throws JSONException {
 
         for (int i = 0; i < response.length(); i++) {
@@ -112,8 +110,6 @@ public class CoursewareResponse {
                 course.TAs.add(new TA(TAId,TAName));
         }
     }
-
-
 
 
     public static String clear(String str) {

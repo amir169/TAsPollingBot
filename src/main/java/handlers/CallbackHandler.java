@@ -80,10 +80,8 @@ public class CallbackHandler extends AbstractUpdateHandler {
         long messageID = update.getCallbackQuery().getMessage().getMessageId();
         long lastMessage = UserData.getInstance().getLastMessage(chatid);
 
-        if(messageID == lastMessage)
-            return false;
+        return messageID != lastMessage;
 
-        return true;
     }
 
     private EditMessageReplyMarkup deleteKeyboard(Update update)
