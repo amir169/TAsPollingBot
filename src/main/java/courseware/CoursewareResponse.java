@@ -21,15 +21,16 @@ import java.util.ArrayList;
  * Created by ABM on 8/25/2016.
  */
 public class CoursewareResponse {
-    static ArrayList<Course> courses = new ArrayList<Course>();
-    static ArrayList<String> TAs = new ArrayList<String>();
 
-    public  void  coursewareResponseFunc() throws JSONException {
-        parseCourses(getJSONFromUrl("https://courseware.sbu.ac.ir/api/v1/courses?state=available&access_token=xeJqvh0OXXOvzZNNUsy53R2CV5Vpr7GVN2rZB9s7ueyUz4Y2S5X1X2RU3cEcEvmK"));
-        for (Course c: courses){
-            parseTAs(getJSONFromUrl("https://courseware.sbu.ac.ir/api/v1/courses/"+c.id+"/users?enrollment_type=ta&access_token=xeJqvh0OXXOvzZNNUsy53R2CV5Vpr7GVN2rZB9s7ueyUz4Y2S5X1X2RU3cEcEvmK"));
-            System.out.println("------------------------------------------------");
+
+    public  User  coursewareResponseFunc() throws JSONException {
+        User user = new User();
+        parseCourses(user , getJSONFromUrl("https://courseware.sbu.ac.ir/api/v1/courses?state=available&access_token=xeJqvh0OXXOvzZNNUsy53R2CV5Vpr7GVN2rZB9s7ueyUz4Y2S5X1X2RU3cEcEvmK"));
+        for (Course c: user.courses){
+            parseTAs(c , getJSONFromUrl("https://courseware.sbu.ac.ir/api/v1/courses/"+c.id+"/users?enrollment_type=ta&access_token=xeJqvh0OXXOvzZNNUsy53R2CV5Vpr7GVN2rZB9s7ueyUz4Y2S5X1X2RU3cEcEvmK"));
+
         }
+        return user;
     }
 
     public static JSONArray getJSONFromUrl(String url) {
@@ -83,7 +84,7 @@ public class CoursewareResponse {
         return jArray;
 
     }
-    public static void parseCourses(JSONArray response) throws JSONException {
+    public static void parseCourses(User user,JSONArray response) throws JSONException {
 
         for (int i = 0; i < response.length(); i++) {
             JSONObject jsonobject = response.getJSONObject(i);
@@ -92,8 +93,8 @@ public class CoursewareResponse {
             if (Integer.parseInt(year) >= 2016) {
                 String courseName = jsonobject.getString("course_code");
                 Integer id = jsonobject.getInt("id");
-                System.out.println(courseName);
-                courses.add(new Course(courseName , id));
+
+                user.courses.add(new Course(courseName , id));
 
             }
         }
@@ -101,13 +102,14 @@ public class CoursewareResponse {
 
 
 
-    public static void parseTAs(JSONArray response) throws JSONException {
+    public static void parseTAs(Course course ,JSONArray response) throws JSONException {
 
         for (int i = 0; i < response.length(); i++) {
             JSONObject jsonobject = response.getJSONObject(i);
                 String TAName = jsonobject.getString("name");
-                System.out.println(TAName);
-                TAs.add(TAName);
+                int TAId = jsonobject.getInt("id");
+
+                course.TAs.add(new TA(TAId,TAName));
         }
     }
 
