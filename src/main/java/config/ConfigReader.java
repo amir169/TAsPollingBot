@@ -6,6 +6,9 @@ package config;
  */
 public class ConfigReader {
 
+
+
+
     private ConfigReader(){};
 
     public static String DB_URL = ConfigUtils.get("url");
@@ -29,6 +32,11 @@ public class ConfigReader {
     public static int MAX_BUTTONS_IN_ROW = Integer.valueOf(ConfigUtils.get("max_buttons_in_row"));
     public static String ANSWER_YES = ConfigUtils.get("yes");
     public static String ANSWER_NO = ConfigUtils.get("no");
+    public static int GET_MAX_COMMENT_SIZE = Integer.valueOf(ConfigUtils.get("max_comment_size"));
+    public static String MESSAGE_SKIP = ConfigUtils.get("skip");
+    public static final String COMMENT_ADDED = ConfigUtils.get("comment_added");
+    public static final String TOO_LARGE_INPUT = ConfigUtils.get("too_large_input");
+    public static final String SURVEY = ConfigUtils.get("survey");
 
     public static String getVotingOption(int index){return ConfigUtils.get("option#" + String.valueOf(index));}
 

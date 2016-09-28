@@ -22,7 +22,7 @@ public abstract class AbstractUpdateHandler {
 
         ArrayList<String> buttons = new ArrayList<>();
         for(int i=0;i<ConfigReader.NUMBER_OF_BUTTONS;i++)
-            buttons.add(ConfigReader.getButtonValue(i + 1));
+            buttons.add(ConfigReader.getVotingOption(i + 1));
 
         List<List<InlineKeyboardButton>> keyboard = createKeyboard(buttons);
 
@@ -31,13 +31,12 @@ public abstract class AbstractUpdateHandler {
         return inlineKeyboardMarkup;
     }
 
-    protected InlineKeyboardMarkup createYesNoKeyboardMarkup()
+    protected InlineKeyboardMarkup createSkipKeyboardMarkup()
     {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         ArrayList<String> buttons = new ArrayList<>();
 
-        buttons.add(ConfigReader.ANSWER_YES);
-        buttons.add(ConfigReader.ANSWER_NO);
+        buttons.add(ConfigReader.MESSAGE_SKIP);
 
         List<List<InlineKeyboardButton>> keyboard = createKeyboard(buttons);
         inlineKeyboardMarkup.setKeyboard(keyboard);
@@ -58,7 +57,7 @@ public abstract class AbstractUpdateHandler {
             {
                 buttons.add(currentRow);
                 currentRow = new ArrayList<>();
-                currentRow.add(new InlineKeyboardButton().setText(buttonNames.get(i + 1)).setCallbackData(String.valueOf(i + 1)));
+                currentRow.add(new InlineKeyboardButton().setText(buttonNames.get(i)).setCallbackData(String.valueOf(i + 1)));
             }
         }
         buttons.add(currentRow);

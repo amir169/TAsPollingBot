@@ -60,7 +60,10 @@ public class CallbackHandler extends AbstractUpdateHandler {
         }
         else {
 
-            sendMessage.setText(ConfigReader.THANK_YOU);
+            sendMessage.setText(ConfigReader.SURVEY);
+            sendMessage.setReplyMarkup(createSkipKeyboardMarkup());
+            sendMessage.enableMarkdown(true);
+            result.add(editMessage(update));
             result.add(sendMessage);
         }
 

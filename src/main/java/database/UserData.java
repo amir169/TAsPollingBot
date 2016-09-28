@@ -2,7 +2,10 @@ package database;
 
 import config.ConfigReader;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -144,5 +147,39 @@ public class UserData {
         ArrayList<Map<String,Object>> result = DBConnection.executeQuery(sql, params);
 
         return new Long((String)result.get(0).get("messageid"));
+    }
+
+    public boolean hasComment(int studentID) {
+        String sql = "SELECT * FROM comment WHERE stid = ?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(studentID);
+        ArrayList<Map<String,Object>> result = DBConnection.executeQuery(sql, params);
+
+
+        return !result.isEmpty();
+
+    }
+
+    public void setComment(int studentID,String comment, Date date)
+    {
+        String sql = "INSERT INTO comment VALUES (?,?,?,?)";
+        ArrayList<Object> params = new ArrayList<>();
+
+        params.add(studentID);
+
+
+
+        try {
+            byte[] bytes = comment.getBytes();
+            comment = new String(bytes,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        params.add(comment);
+        params.add(ConfigReader.CURRENT_TERM);
+        params.add(new java.sql.Date(date.getTime()));
+
+        DBConnection.executeUpdate(sql,params);
     }
 }
