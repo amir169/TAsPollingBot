@@ -39,8 +39,8 @@ public class QuestionGenerator {
 
     private String createQuestionText(String taName, String courseName, Integer questionNumber) {
        
-        return ConfigReader.CONSTANT_QUESTION_STATEMENT +
-                taName + " " + courseName + "\n\n" +ConfigReader.getQuestion(questionNumber + 1);
+        return "در مورد" + "  " +
+                taName + "  در درس  " + courseName +" :"+ "\n\n" +ConfigReader.getQuestion(questionNumber + 1);
 
     }
 

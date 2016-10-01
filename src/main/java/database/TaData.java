@@ -55,7 +55,7 @@ public class TaData {
             e.printStackTrace();
         }
         params.add(name);
-        System.out.println(name);
+
         if(!searchTA(ta.TAId))
             DBConnection.executeUpdate(sql,params);
     }

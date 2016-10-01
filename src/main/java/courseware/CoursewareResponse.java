@@ -68,16 +68,15 @@ public class CoursewareResponse {
             is.close();
             json = sb.toString();
         } catch (Exception e) {
-            System.out.println("Buffer Error Error converting result ");
+            System.err.println("Buffer Error Error converting result ");
         }
 
         // try parse the string to a JSON object
         try {
             json = clear(json);
-            System.out.println(json);
             jArray = new JSONArray(json);
         } catch (JSONException e) {
-            System.out.println("JSON Parser Error parsing data ");
+            System.err.println("JSON Parser Error parsing data ");
         }
 
 

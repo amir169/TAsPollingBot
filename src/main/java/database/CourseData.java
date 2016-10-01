@@ -56,7 +56,6 @@ public class CourseData {
             e.printStackTrace();
         }
         params.add(name);
-        System.out.println(name);
 
         if(!searchCourse(course.id))
             DBConnection.executeUpdate(sql,params);

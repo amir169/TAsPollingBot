@@ -40,11 +40,13 @@ public class HandlerFactory {
         int studentID = UserData.getInstance()
                 .getStudentIdByChatid(chatid);
 
-        Map<String,Integer> state = UserData.getInstance().getState(studentID);
-        if(state.get("taCourseNumber") >= UserData.getInstance().getTaCourseCount(studentID))
-            if(!UserData.getInstance().hasComment(studentID))
-                return true;
 
+        if(UserData.getInstance().searchUser(chatid)) {
+            Map<String,Integer> state = UserData.getInstance().getState(studentID);
+            if (state.get("taCourseNumber") >= UserData.getInstance().getTaCourseCount(studentID))
+                if (!UserData.getInstance().hasComment(studentID))
+                    return true;
+        }
         return false;
     }
 }

@@ -27,17 +27,13 @@ public class Main {
 
         for(Course c : user.courses){
             CourseData.getInstance().addCourse(c);
-//            System.out.println("course name = "+c.name);
-//            System.out.println("course id ="+ c.id);
+
+
 
             for (TA t : c.TAs){
                 TaData.getInstance().addTA(t);
                 UserData.getInstance().addTaCourse(123,t.TAId,c.id);
-//   System.out.println("ta name= "+ t.TAname);
-//                System.out.println("ta id = "+ t.TAId);
-//                System.out.println("+++++++++++++");
             }
-//            System.out.println("----------------------------------------------------");
         }
 
     }
